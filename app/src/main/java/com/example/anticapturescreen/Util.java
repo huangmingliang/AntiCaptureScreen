@@ -22,17 +22,17 @@ public class Util {
     }
 
     public List<AppInfo> getInstalledPackNames(Context context,boolean isContainSystemApp){
-        MyDbUtil myDbUtil=new MyDbUtil(context,Constant.DB_NAME);
         List<AppInfo> appInfoList=new ArrayList<>();
         List<String> packNames=new ArrayList<>();
-        packNames=myDbUtil.getAntiCapturePackNames();
+        List<PackageInfo> packageInfoList=new ArrayList<>();
         if (context==null){
             return appInfoList;
         }
-        List<PackageInfo> packageInfoList=new ArrayList<>();
+        MyDbUtil myDbUtil=new MyDbUtil(context,Constant.DB_NAME);
+        packNames=myDbUtil.getAntiCapturePackNames();
         packageInfoList=context.getPackageManager().getInstalledPackages(0);
         for (PackageInfo packageInfo:packageInfoList){
-            if (!isContainSystemApp&&(packageInfo.applicationInfo.flags&ApplicationInfo.FLAG_SYSTEM)!=0){
+            if (!isContainSystemApp&&(packageInfo.applicationInfo.flags&ApplicationInfo.FLAG_SYSTEM)!=0){      //过滤系统应用
                 continue;
             }
             AppInfo appInfo=new AppInfo();
@@ -41,7 +41,7 @@ public class Util {
             appInfo.setPackIcon(packageInfo.applicationInfo.loadIcon(context.getPackageManager()));
             if (packNames.contains(packageInfo.packageName)){
                 appInfo.setOpen(true);
-                appInfo.setSortChar("a");
+                appInfo.setSortChar("a");                //设置应用排序字符串，使已开启防截屏的应用显示在列表前面
             }else{
                 appInfo.setOpen(false);
                 appInfo.setSortChar("b");

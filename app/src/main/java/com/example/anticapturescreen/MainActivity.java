@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = getClass().getSimpleName();
     private Context context;
+    private DataBaseContext dataBaseContext;
     private Util util;
     private ListView appListView;
     private MyAdapter adapter;
@@ -24,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applist);
         context=this;
-        util=new Util(context);
+        dataBaseContext=new DataBaseContext(context,Constant.DB_DIR,Constant.DB_NAME);
+        util=new Util(dataBaseContext);
         appListView=(ListView)findViewById(R.id.appList);
-        appInfoList=util.getInstalledPackNames(context,false);
-        adapter=new MyAdapter(context,appInfoList);
+        appInfoList=util.getInstalledPackNames(dataBaseContext,false);
+        adapter=new MyAdapter(dataBaseContext,appInfoList);
         appListView.setAdapter(adapter);
     }
 

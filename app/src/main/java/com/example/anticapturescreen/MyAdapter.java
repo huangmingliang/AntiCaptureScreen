@@ -19,8 +19,8 @@ import java.util.List;
 public class MyAdapter extends BaseAdapter{
 
     private String TAG=getClass().getSimpleName();
-    Context context;
-    List<AppInfo>  appInfoList;
+    private Context context;
+    private List<AppInfo>  appInfoList;
     MyAdapter(Context context, List<AppInfo> appInfoList){
         this.context=context;
         this.appInfoList=appInfoList;

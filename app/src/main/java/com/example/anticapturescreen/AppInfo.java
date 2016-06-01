@@ -9,8 +9,8 @@ public class AppInfo {
     private String packName;
     private String appName;
     private Drawable packIcon;
-    private boolean isOpen;
-    private String sortChar;
+    private boolean isOpen;        //是否已开启防截屏
+    private String sortChar;       //用于列表数据排序
 
     public String getSortChar() {
         return sortChar;
