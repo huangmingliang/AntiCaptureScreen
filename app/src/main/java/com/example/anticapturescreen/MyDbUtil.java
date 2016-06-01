@@ -20,13 +20,21 @@ public class MyDbUtil {
     private SQLiteDatabase db;
     private Cursor cursor;
 
-    MyDbUtil(Context context) {
+
+    /**
+     * @param context
+     * @param dbName
+     */
+    MyDbUtil(Context context,String dbName) {
         this.context = context;
-        mySQLiteHelper = new MySQLiteHelper(context, Constant.DB_NAME, null, Constant.DB_VERSION);
+        mySQLiteHelper = new MySQLiteHelper(context, dbName, null, Constant.DB_VERSION);
         db = mySQLiteHelper.getReadableDatabase();
     }
 
-    public Cursor getAntiCapturePackNames() {
+    /**
+     * @return cursor The cursor contain antiCapturePackNames
+     */
+    public Cursor getAntiCapturePackNamesCursor() {
         if (db == null || !db.isOpen()) {
             db = mySQLiteHelper.getReadableDatabase();
         }
@@ -34,12 +42,20 @@ public class MyDbUtil {
         return cursor;
     }
 
+    /**
+     * @param packName
+     * @return
+     */
     public long addAntiCapturePackNames(String packName) {
         long index = -1;
         if (db == null || !db.isOpen()) {
             db = mySQLiteHelper.getReadableDatabase();
         }
-        if (!isDataAlreadyInTable(packName)) {
+        if (packName==null){
+            Log.e(TAG,"packName is null");
+            return -1;
+        }
+        if (!isPackageAlreadyInTable(packName)) {
             ContentValues values = new ContentValues();
             values.put(Constant.Pack_NAME, packName);
             index = db.insert(Constant.TABLE_NAME, null, values);
@@ -49,27 +65,49 @@ public class MyDbUtil {
         return index;
     }
 
+    /**
+     * @param packNames
+     */
+    public void addAntiCapturePackNames(List<String> packNames){
+        if (packNames==null){
+            return;
+        }
+        for (String packName:packNames){
+            addAntiCapturePackNames(packName);
+        }
+    }
+
+    /**
+     * @param packName
+     * @return
+     */
     public int removeAntiCapturePackNames(String packName) {
         int index = -1;
         if (db == null || !db.isOpen()) {
             db = mySQLiteHelper.getReadableDatabase();
         }
-        if (isDataAlreadyInTable(packName)) {
+        if (isPackageAlreadyInTable(packName)) {
             index = db.delete(Constant.TABLE_NAME, Constant.Pack_NAME + "=?", new String[]{packName});
         }
         return index;
     }
 
+    /**
+     *
+     */
     public void release() {
         if (db != null && db.isOpen()) {
             db.close();
         }
     }
 
-    public List<String> getPackNamesFromTable() {
+    /**
+     * @return
+     */
+    public List<String> getAntiCapturePackNames() {
         List<String> packNames = new ArrayList<>();
         String packName = null;
-        getAntiCapturePackNames();
+        getAntiCapturePackNamesCursor();
         if (cursor == null) {
             Log.e(TAG, "cursor is null");
             packNames.clear();
@@ -90,14 +128,18 @@ public class MyDbUtil {
         return packNames;
     }
 
-    private boolean isDataAlreadyInTable(String packName) {
+    /**
+     * @param packName
+     * @return
+     */
+    private boolean isPackageAlreadyInTable(String packName) {
         List<String> packNames = new ArrayList<>();
-        packNames = getPackNamesFromTable();
+        packNames = getAntiCapturePackNames();
         if (packName != null && !packNames.contains(packName)) {
-            Log.e(TAG, "packageName " + packName + " not exists in the table " + Constant.TABLE_NAME);
+            //Log.e(TAG, "packageName " + packName + " not exists in the table " + Constant.TABLE_NAME);
             return false;
         } else {
-            Log.e(TAG, "packageName " + packName + " exists in the table " + Constant.TABLE_NAME);
+            //Log.e(TAG, "packageName " + packName + " exists in the table " + Constant.TABLE_NAME);
             return true;
         }
     }

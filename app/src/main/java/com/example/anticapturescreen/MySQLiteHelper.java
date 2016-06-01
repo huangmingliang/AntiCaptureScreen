@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by Huangmingliang on 2016/5/27 0027.
  */
-   public class MySQLiteHelper extends SQLiteOpenHelper{
+    class MySQLiteHelper extends SQLiteOpenHelper{
 
     private final String TABLE_NAME="AntiCapturePackage";
     private final String ID="_id";
@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
             "create table if not exists " +TABLE_NAME+
             "("+ID+" integer primary key autoincrement," +Pack_NAME+" varchar(50))";
 
-    public MySQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    MySQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 

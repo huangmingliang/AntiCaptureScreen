@@ -6,7 +6,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -31,9 +30,9 @@ public class ProviderUtil extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.e(TAG,TAG+" is created");
+        //Log.e(TAG,TAG+" is created");
         matcher.addURI(AUTHORITY,PATH,CODE);
-        myDbUtil=new MyDbUtil(this.getContext());
+        myDbUtil=new MyDbUtil(this.getContext(),Constant.DB_NAME);
         return true;
     }
 
@@ -43,7 +42,7 @@ public class ProviderUtil extends ContentProvider {
         Cursor cursor=null;
         Log.e(TAG,"uri="+uri.toString());
         if (matcher.match(uri)==CODE){
-            cursor=myDbUtil.getAntiCapturePackNames();
+            cursor=myDbUtil.getAntiCapturePackNamesCursor();
         }
         Log.e(TAG,"cursor:"+cursor);
         return cursor;
