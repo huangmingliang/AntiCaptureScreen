@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Huangmingliang on 2016/5/30 0030.
  */
-public class MyDbUtil {
+public class DbUtil {
 
     private String TAG = getClass().getSimpleName();
     private Context context;
@@ -25,7 +25,7 @@ public class MyDbUtil {
      * @param context
      * @param dbName
      */
-    MyDbUtil(Context context,String dbName) {
+    DbUtil(Context context, String dbName) {
         this.context = context;
         mySQLiteHelper = new MySQLiteHelper(context, dbName, null, Constant.DB_VERSION);
         db = mySQLiteHelper.getReadableDatabase();

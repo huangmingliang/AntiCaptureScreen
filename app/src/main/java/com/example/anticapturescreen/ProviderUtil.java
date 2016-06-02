@@ -2,6 +2,7 @@ package com.example.anticapturescreen;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,13 +27,14 @@ public class ProviderUtil extends ContentProvider {
     private final String SD_PATH= Environment.getExternalStorageDirectory().getAbsolutePath();
     private final String DB_DIR=SD_PATH+ File.separator+"/AntiCapture";
     private final String DB_NAME="AntiCapture.db";
-    private MyDbUtil myDbUtil;
+    private DbUtil dbUtil;
+    private Context mContext;
 
     @Override
     public boolean onCreate() {
-        //Log.e(TAG,TAG+" is created");
         matcher.addURI(AUTHORITY,PATH,CODE);
-        myDbUtil=new MyDbUtil(this.getContext(),Constant.DB_NAME);
+        mContext=new DBContext(this.getContext(),Constant.DB_DIR,Constant.DB_NAME);
+        dbUtil =new DbUtil(mContext,Constant.DB_NAME);
         return true;
     }
 
@@ -40,11 +42,9 @@ public class ProviderUtil extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor=null;
-        Log.e(TAG,"uri="+uri.toString());
         if (matcher.match(uri)==CODE){
-            cursor=myDbUtil.getAntiCapturePackNamesCursor();
+            cursor= dbUtil.getAntiCapturePackNamesCursor();
         }
-        Log.e(TAG,"cursor:"+cursor);
         return cursor;
     }
 

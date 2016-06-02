@@ -1,9 +1,9 @@
 package com.example.anticapturescreen;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,12 +13,18 @@ import java.util.List;
 /**
  * Created by Huangmingliang on 2016/5/31 0031.
  */
-public class Util {
+public class CommonUtil {
     private String TAG=getClass().getSimpleName();
     private Context mContext;
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private final String SP_NAME="systemAppFilter";
+    private final String FILTER_STATUS="isFilter";
 
-    public Util(Context context){
+    public CommonUtil(Context context){
         mContext=context;
+        sp=context.getSharedPreferences(SP_NAME,Context.MODE_PRIVATE);
+        editor=sp.edit();
     }
 
     public List<AppInfo> getInstalledPackNames(Context context,boolean isContainSystemApp){
@@ -28,8 +34,8 @@ public class Util {
         if (context==null){
             return appInfoList;
         }
-        MyDbUtil myDbUtil=new MyDbUtil(context,Constant.DB_NAME);
-        packNames=myDbUtil.getAntiCapturePackNames();
+        DbUtil dbUtil =new DbUtil(context,Constant.DB_NAME);
+        packNames= dbUtil.getAntiCapturePackNames();
         packageInfoList=context.getPackageManager().getInstalledPackages(0);
         for (PackageInfo packageInfo:packageInfoList){
             if (!isContainSystemApp&&(packageInfo.applicationInfo.flags&ApplicationInfo.FLAG_SYSTEM)!=0){      //过滤系统应用
@@ -55,5 +61,17 @@ public class Util {
             }
         });
         return appInfoList;
+    }
+
+    public void saveSystemAppFilterStatus(boolean isContainSystemApp){
+        editor.clear();
+        editor.putBoolean(FILTER_STATUS,isContainSystemApp);
+        editor.commit();
+    }
+
+    public boolean isContainSystemApp(){
+        boolean isContain;
+        isContain=sp.getBoolean(FILTER_STATUS,false);
+        return  isContain;
     }
 }

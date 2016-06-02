@@ -10,55 +10,59 @@ import java.io.IOException;
 
 /**
  * Created by Huangmingliang on 2016/6/1 0001.
+ * 自定义SQLiteOpenHelper创建数据库的路路径
  */
-public class DataBaseContext extends ContextWrapper{
+public class DBContext extends ContextWrapper {
+    private String TAG = getClass().getSimpleName();
     private String dbAsbDir;
     private String dbName;
-    public DataBaseContext(Context base) {
+
+    public DBContext(Context base) {
         super(base);
     }
 
-    public DataBaseContext(Context context,String dbAsbDir,String dbName){
+    public DBContext(Context context, String dbAsbDir, String dbName) {
         this(context);
-        this.dbAsbDir=dbAsbDir;
-        this.dbName=dbName;
+        this.dbAsbDir = dbAsbDir;
+        this.dbName = dbName;
 
     }
 
     @Override
     public File getDatabasePath(String name) {
-        if (dbAsbDir==null){
+        if (dbAsbDir == null) {
             return super.getDatabasePath(name);
         }
-        if (dbName==null){
-            return super.getDatabasePath(name);
+        if (dbName == null) {
+
         }
-        File dir=new File(dbAsbDir);
-        if (!dir.exists()){
+        File dir = new File(dbAsbDir);
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        String dbAsbPath=dbAsbDir+File.separator+dbName;
-        File dbFile=new File(dbAsbPath);
-        if (!dbFile.exists()){
+        String dbAsbPath = dbAsbDir + File.separator + dbName;
+        File dbFile = new File(dbAsbPath);
+        if (!dbFile.exists()) {
             try {
                 dbFile.createNewFile();
                 return dbFile;
             } catch (IOException e) {
                 e.printStackTrace();
+                return super.getDatabasePath(name);
             }
         }
-        return super.getDatabasePath(name);
+        return dbFile;
     }
 
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory) {
-        String dbName=getDatabasePath(name).getAbsolutePath();
+        String dbName = getDatabasePath(name).getAbsolutePath();
         return super.openOrCreateDatabase(dbName, mode, factory);
     }
 
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
-        String dbName=getDatabasePath(name).getAbsolutePath();
+        String dbName = getDatabasePath(name).getAbsolutePath();
         return super.openOrCreateDatabase(dbName, mode, factory, errorHandler);
     }
 }

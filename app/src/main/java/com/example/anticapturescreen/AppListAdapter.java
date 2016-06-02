@@ -1,14 +1,11 @@
 package com.example.anticapturescreen;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,12 +13,12 @@ import java.util.List;
 /**
  * Created by Huangmingliang on 2016/6/1 0001.
  */
-public class MyAdapter extends BaseAdapter{
+public class AppListAdapter extends BaseAdapter{
 
     private String TAG=getClass().getSimpleName();
     private Context context;
     private List<AppInfo>  appInfoList;
-    MyAdapter(Context context, List<AppInfo> appInfoList){
+    AppListAdapter(Context context, List<AppInfo> appInfoList){
         this.context=context;
         this.appInfoList=appInfoList;
     }
@@ -66,7 +63,7 @@ public class MyAdapter extends BaseAdapter{
         holderView.mSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyDbUtil dbUtil=new MyDbUtil(context,Constant.DB_NAME);
+                DbUtil dbUtil=new DbUtil(context,Constant.DB_NAME);
                 if (appInfoList.get(position).isOpen()){
                     dbUtil.removeAntiCapturePackNames(appInfoList.get(position).getPackName());
                     holderView.mSwitch.setImageResource(R.mipmap.off);
